@@ -29,12 +29,12 @@ public class CounterController {
         log.info("Producer count :{} , Consumer count : {}", producerCount, consumerCount);
         requestService.save(producerCount, consumerCount);
         counterManager.executeConsumerAndProducer(producerCount, consumerCount);
-        return ResponseEntity.status(HttpStatus.ACCEPTED.CREATED).build();
+        return ResponseEntity.status(HttpStatus.CREATED).build();
     }
 
     @PutMapping(value = "/update")
     public ResponseEntity updateValue(@RequestParam int newValue) {
         counterManager.updateValue(newValue);
-        return ResponseEntity.status(HttpStatus.CREATED).build();
+        return ResponseEntity.status(HttpStatus.OK).build();
     }
 }
