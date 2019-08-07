@@ -56,7 +56,7 @@ public class CounterConsumer implements Runnable {
     private void persist() {
         executorService.execute(() -> {
             Counter counter = new Counter();
-            counter.setThreadName("Counter Consumer");
+            counter.setThreadName("CounterConsumer");
             counter.setDateCreated(new Date());
             if (counterRepository != null) {
                 counterRepository.save(counter);

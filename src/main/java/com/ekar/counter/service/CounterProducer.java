@@ -40,10 +40,10 @@ public class CounterProducer implements Runnable {
                     log.warn("Exiting value is beyond MAX");
                     return;
                 }
-                log.info("Producer produced - " + currentValue);
+                log.info("Producer produced : {} " + currentValue);
                 TimeUnit.SECONDS.sleep(TIME_OUT);
                 if (currentValue == MAX_VALUE) {
-                    log.info("Persisting to Database -- Max Value Produced -- " + currentValue);
+                    log.info("Persisting to Database -- Max Value Produced : {} " + currentValue);
                     persist();
                     return;
                 }
@@ -56,7 +56,7 @@ public class CounterProducer implements Runnable {
     private void persist() {
         executorService.execute(() -> {
             Counter counter = new Counter();
-            counter.setThreadName("Counter Producer");
+            counter.setThreadName("CounterProducer");
             counter.setDateCreated(new Date());
             if (counterRepository != null) {
                 counterRepository.save(counter);
