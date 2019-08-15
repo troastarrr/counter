@@ -16,9 +16,12 @@ public class CounterConsumer implements Runnable {
     private static final int MIN_VALUE = 0;
     private static final int TIME_OUT_IDLE = 3;
     private static final int TIME_OUT = 1;
+    private static final int RETRY_COUNT = 5;
     private AtomicInteger atomicInteger;
     private CounterRepository counterRepository;
     private ExecutorService executorService;
+
+
 
     public CounterConsumer(AtomicInteger atomicInteger, CounterRepository counterRepository,
                            ExecutorService executorService) {
@@ -30,9 +33,14 @@ public class CounterConsumer implements Runnable {
     @Override
     public void run() {
         try {
+            int retryCount = 0;
             while (atomicInteger.get() < MIN_VALUE) {
                 log.info("Consumer is waiting...");
                 TimeUnit.SECONDS.sleep(TIME_OUT_IDLE);
+                retryCount++;
+                if (retryCount == RETRY_COUNT) {
+                    return;
+                }
             }
             while (atomicInteger.get() > MIN_VALUE) {
                 int currentValue = atomicInteger.decrementAndGet();

@@ -15,7 +15,8 @@ public class CounterProducer implements Runnable {
     private final static Logger log = LoggerFactory.getLogger(CounterProducer.class);
     private static final int MAX_VALUE = 100;
     private static final int TIME_OUT_IDLE = 3;
-    private static final int TIME_OUT = 1;
+    private static final int TIME_OUT = 3;
+    private static final int RETRY_COUNT = 5;
     private AtomicInteger atomicInteger;
 
     private CounterRepository counterRepository;
@@ -30,9 +31,14 @@ public class CounterProducer implements Runnable {
     @Override
     public void run() {
         try {
+            int retryCount = 0;
             while (atomicInteger.get() > MAX_VALUE) {
                 log.info("Producer is waiting...");
                 TimeUnit.SECONDS.sleep(TIME_OUT_IDLE);
+                retryCount++;
+                if (retryCount == RETRY_COUNT) {
+                    return;
+                }
             }
             while (atomicInteger.get() < MAX_VALUE) {
                 int currentValue = atomicInteger.incrementAndGet();
